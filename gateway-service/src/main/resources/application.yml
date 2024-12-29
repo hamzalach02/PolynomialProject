@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: input-service
+          uri: lb://INPUT-SERVICE
+          predicates:
+            - Path=/input/**
+        - id: computation-service
+          uri: lb://COMPUTATION-SERVICE
+          predicates:
+            - Path=/computation/**
+        - id: result-service
+          uri: lb://RESULT-SERVICE
+          predicates:
+            - Path=/results/**
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/notifications/**
+  kafka:
+    bootstrap-servers: localhost:9092
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
